@@ -1,0 +1,27 @@
+﻿<Window x:Class="Fintech_Test_.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fintech_Test_"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <TabControl>
+            <!--#region Product -->
+            <TabItem Uid="0" Header="Product" FontSize="18">
+                
+            </TabItem>
+
+            <!--#region Links -->
+            <TabItem Uid="0" Header="Links" FontSize="18">
+
+            </TabItem>
+
+            <!--#region Отчет -->
+            <TabItem Uid="0" Header="Отчет" FontSize="18">
+
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
