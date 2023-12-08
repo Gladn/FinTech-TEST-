@@ -4,24 +4,152 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Fintech_Test_"
+        xmlns:data="clr-namespace:Fintech_Test_.ViewModel" d:DataContext="{d:DesignInstance Type=data:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Тестовое задание" Height="500" Width="900">
+
+    <Window.Resources>
+        <Style x:Key="CustomDataGridStyle_1" TargetType="DataGrid">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
+    </Window.Resources>
+
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <TabControl>
             <!--#region Product -->
-            <TabItem Uid="0" Header="Product" FontSize="18">
-                
-            </TabItem>
+            <TabItem Uid="0" Header="Product" Grid.Row="0" FontSize="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
+                    <DataGrid x:Name="ProductDataGrid" 
+                            AutoGenerateColumns="False" 
+                            Margin="10" Grid.Column="0"                          
+                            Style="{StaticResource CustomDataGridStyle_1}"
+                            ItemsSource="{Binding Product}"  
+                            SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="Название изделия" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Column="1" Margin="20" Width="250" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
+                        <StackPanel>
+                            <!-- insert -->
+                            <Expander Header="Добавить изделие" FontSize="14" IsExpanded="{Binding Expander1IsExpanded}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Название:"/></TextBlock>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Цена:"/></TextBlock>
+
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                             Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <Button  Grid.Row="2" Grid.ColumnSpan="2" Margin="15" FontSize="15" 
+                                             Content="Добавить"
+                                             Command="{Binding AddProductCommand}"/>
+                                </Grid>
+                            </Expander>
+
+                            <!-- update -->
+                            <Expander Header="Изменить изделие"  FontSize="14" IsExpanded="{Binding Expander2IsExpanded}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Название:"/></TextBlock>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Цена:"/></TextBlock>
+
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Text="{Binding SelectedProduct.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                             Text="{Binding SelectedProduct.Price, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <Button  Grid.Row="2" Grid.ColumnSpan="2" Margin="10" 
+                                             Content="Изменить" 
+                                            Command="{Binding UpdateProductCommand}"/>
+                                </Grid>
+                            </Expander>
+
+                            <!-- delete -->
+                            <Button Content="Удалить изделие" 
+                                    Margin="10 50 10 10" FontSize="14" 
+                                    Command="{Binding DeleteProductCommand}" 
+                                    CommandParameter="{Binding ElementName=ProductDataGrid, Path=SelectedItem}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <!--#endregion -->
+                
             <!--#region Links -->
             <TabItem Uid="0" Header="Links" FontSize="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
+                    <DataGrid x:Name="LinksDataGrid" 
+                                AutoGenerateColumns="True" 
+                                Margin="10" Grid.Column="0"                          
+                                Style="{StaticResource CustomDataGridStyle_1}"
+                                ItemsSource="{Binding Links}"  
+                                 SelectedItem="{Binding SelectedLinks, Mode=TwoWay}">
+                    </DataGrid>
+
+                    
+                </Grid>
             </TabItem>
-
+            <!--#endregion-->
+            
             <!--#region Отчет -->
             <TabItem Uid="0" Header="Отчет" FontSize="18">
 
             </TabItem>
+            <!--#endregion-->
         </TabControl>
+        
+        <Grid Grid.Row="1" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Подключить к базе" Command="{Binding ConnectCommand}" Margin="10"/>
+            <TextBlock Grid.Column="1" Text="{Binding ABCD}"  Margin="10"/>
+        </Grid>
     </Grid>
 </Window>
