@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Fintech_Test_"
-        xmlns:data="clr-namespace:Fintech_Test_.ViewModel" d:DataContext="{d:DesignInstance Type=data:MainViewModel}"
+        xmlns:data="clr-namespace:Fintech_Test_.ViewModel"
         mc:Ignorable="d"
         Title="Тестовое задание" Height="500" Width="900">
 
     <Window.Resources>
+        <data:ProductViewModel x:Key="ProductVieModel"/>
+
         <Style x:Key="CustomDataGridStyle_1" TargetType="DataGrid">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -28,7 +30,7 @@
         </Grid.RowDefinitions>
         <TabControl>
             <!--#region Product -->
-            <TabItem Uid="0" Header="Product" Grid.Row="0" FontSize="18">
+            <TabItem Uid="0" x:Name="ProductTabItem" Header="Product" Grid.Row="0" FontSize="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -38,7 +40,7 @@
                     <DataGrid x:Name="ProductDataGrid" 
                             AutoGenerateColumns="False" 
                             Margin="10" Grid.Column="0"                          
-                            Style="{StaticResource CustomDataGridStyle_1}"
+                            Style="{StaticResource CustomDataGridStyle_1}"                         
                             ItemsSource="{Binding Product}"  
                             SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
                         <DataGrid.Columns>

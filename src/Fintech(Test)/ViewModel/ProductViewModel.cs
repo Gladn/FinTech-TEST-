@@ -1,34 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using Fintech_Test_.Commands;
+﻿using Fintech_Test_.ViewModel.Command;
 using Fintech_Test_.Model;
 using Fintech_Test_.Model.DataContext;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Fintech_Test_.ViewModel
 {
-    internal class MainViewModel : INotifyPropertyChanged
+    internal class ProductViewModel : ViewModelBase
     {
-        private ObservableCollection<Links> _links;
-
-        public ObservableCollection<Links> Links
-        {
-            get => _links;
-            set => Set(ref _links, value);
-        }
-
-        
-        
-        
         #region Product
 
         private ObservableCollection<Product> _product;
@@ -41,7 +21,7 @@ namespace Fintech_Test_.ViewModel
             get => _product;
             set => Set(ref _product, value);
         }
-        
+
         public string Name
         {
             get => _name;
@@ -53,26 +33,26 @@ namespace Fintech_Test_.ViewModel
             get => _price;
             set => Set(ref _price, value);
         }
-        
-        public Product SelectedProduct
+
+        public Product? SelectedProduct
         {
             get { return _selectedProduct; }
             set { Set(ref _selectedProduct, value); }
         }
 
 
-        public async Task LoadDataAsync()
+        public async Task LoadProductDataAsync()
         {
             using (var context = new ApplicationContext())
             {
-                //Links = new ObservableCollection<Links>(await context.Links.ToListAsync());
                 Product = new ObservableCollection<Product>(await context.Product.ToListAsync());
             }
         }
 
-      
+
+
         #region Добавить Product        
-        
+
         public ICommand AddProductCommand { get; }
         private bool CanAddProductCommandExecute(object parameter) => true;
         private async void OnAddProductCommandExecuted(object parameter)
@@ -85,7 +65,7 @@ namespace Fintech_Test_.ViewModel
             using (var context = new ApplicationContext())
             {
                 var newProduct = new Product
-                {               
+                {
                     Name = Name,
                     Price = Price
                 };
@@ -93,19 +73,22 @@ namespace Fintech_Test_.ViewModel
                 context.Product.Add(newProduct);
                 await context.SaveChangesAsync();
                 Product.Add(newProduct);
-               
+
                 Name = string.Empty;
                 Price = 0.0m;
-                await LoadDataAsync();
+                await LoadProductDataAsync();
             }
         }
 
         #endregion
 
+
+
         #region Изменить Product
 
         public ICommand UpdateProductCommand { get; }
-        private bool CanUpdateProductCommandExecute(object parameter) => true;
+        private bool CanUpdateProductCommandExecute(object parameter) => SelectedProduct != null ? true : false;
+
         private async void OnUpdateProductCommandExecuted(object parameter)
         {
             await UpdateProductAsync();
@@ -124,17 +107,19 @@ namespace Fintech_Test_.ViewModel
 
                     Name = string.Empty;
                     Price = 0.0m;
-                    await LoadDataAsync();
+                    await LoadProductDataAsync();
                 }
             }
         }
 
         #endregion
 
+
+
         #region Удалить Product
 
         public ICommand DeleteProductCommand { get; }
-        private bool CanDeleteProductCommandExecute(object parameter) => true;
+        private bool CanDeleteProductCommandExecute(object parameter) => SelectedProduct != null ? true : false;
         private async void OnDeleteProductCommandExecuted(object parameter)
         {
             await DeleteProductAsync();
@@ -148,30 +133,18 @@ namespace Fintech_Test_.ViewModel
                     context.Product.Remove(SelectedProduct);
                     await context.SaveChangesAsync();
 
-
                     SelectedProduct = null;
-
-                    await LoadDataAsync();
+                    await LoadProductDataAsync();
                 }
             }
         }
 
         #endregion
-        #endregion
 
-        
-       
-        #region Links
-        #region Добавить Links
-        #endregion
-        #region Изменить Links 
-        #endregion
-        #region Удалить Links
-        #endregion
         #endregion
 
 
-        #region Визульные улучшения
+        #region Визульные улучшения Expanders
         private bool _expander1IsExpanded;
         private bool _expander2IsExpanded;
         public bool Expander1IsExpanded
@@ -186,7 +159,7 @@ namespace Fintech_Test_.ViewModel
                 }
             }
         }
-        
+
         public bool Expander2IsExpanded
         {
             get { return _expander2IsExpanded; }
@@ -202,38 +175,17 @@ namespace Fintech_Test_.ViewModel
         #endregion
 
 
-        public MainViewModel()
+        public ProductViewModel()
         {
             Product = new ObservableCollection<Product>();
-            Links = new ObservableCollection<Links>();
 
-            _ = LoadDataAsync();
+            _ = LoadProductDataAsync();
 
             AddProductCommand = new RelayCommand(OnAddProductCommandExecuted, CanAddProductCommandExecute);
 
             UpdateProductCommand = new RelayCommand(OnUpdateProductCommandExecuted, CanUpdateProductCommandExecute);
 
             DeleteProductCommand = new RelayCommand(OnDeleteProductCommandExecuted, CanDeleteProductCommandExecute);
-        
-        
-        
-        }
-        
-        
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? PropertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
-        }
-
-        protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string? PropertyName = null)
-        {
-            if (Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(PropertyName);
-            return true;
         }
     }
 }

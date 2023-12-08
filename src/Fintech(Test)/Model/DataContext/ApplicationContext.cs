@@ -4,8 +4,8 @@ namespace Fintech_Test_.Model.DataContext
 {
     class ApplicationContext : DbContext
     {
-       // public DbSet<Links>? Links { get; set; }
         public DbSet<Product>? Product { get; set; }
+        // public DbSet<Links>? Links { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

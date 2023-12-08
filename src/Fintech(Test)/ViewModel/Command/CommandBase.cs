@@ -1,8 +1,8 @@
 ﻿using System.Windows.Input;
 
-namespace Fintech_Test_.Commands
+namespace Fintech_Test_.ViewModel.Command
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         private readonly Action<object?> _Execute;
         private readonly Func<object?, bool> _CanExecute;
