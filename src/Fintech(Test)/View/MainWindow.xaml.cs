@@ -21,6 +21,7 @@ namespace Fintech_Test_
         {
             InitializeComponent();
             ProductTabItem.DataContext = new ProductViewModel();
+            LinksTabItem.DataContext = new LinksViewModel();
         }
     }
 }

@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Fintech_Test_"
-        xmlns:data="clr-namespace:Fintech_Test_.ViewModel"
+        xmlns:data="clr-namespace:Fintech_Test_.ViewModel" 
         mc:Ignorable="d"
         Title="Тестовое задание" Height="500" Width="900">
 
     <Window.Resources>
-        <data:ProductViewModel x:Key="ProductVieModel"/>
+        <data:ProductViewModel x:Key="ProductViewModel"/>
+        <data:LinksViewModel x:Key="LinksViewModel"/>
+
 
         <Style x:Key="CustomDataGridStyle_1" TargetType="DataGrid">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -28,9 +30,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TabControl>
+        <TabControl Grid.Row="0">
             <!--#region Product -->
-            <TabItem Uid="0" x:Name="ProductTabItem" Header="Product" Grid.Row="0" FontSize="18">
+            <TabItem Uid="0" x:Name="ProductTabItem" Header="Product" FontSize="18" DataContext="{StaticResource ProductViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -117,8 +119,10 @@
             </TabItem>
             <!--#endregion -->
                 
+            
+            
             <!--#region Links -->
-            <TabItem Uid="0" Header="Links" FontSize="18">
+            <TabItem Uid="0" x:Name="LinksTabItem" Header="Links"  FontSize="18" DataContext="{StaticResource LinksViewModel}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -133,10 +137,82 @@
                                  SelectedItem="{Binding SelectedLinks, Mode=TwoWay}">
                     </DataGrid>
 
-                    
+                    <Border Grid.Column="1" Margin="20" Width="250" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
+                        <StackPanel>
+                            <!-- insert -->
+                            <Expander Header="Добавить ссылки" FontSize="14">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Родитель:"/></TextBlock>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Наследник:"/></TextBlock>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Количество:"/></TextBlock>
+
+                                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Text="{Binding Links, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Text="{Binding Links, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5" 
+                                             Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}"/>
+                                    
+
+                                    <Button  Grid.Row="2" Grid.ColumnSpan="2" Margin="15" FontSize="15" 
+                                                Content="Добавить"
+                                                Command="{Binding AddLinksCommand}"/>
+                                </Grid>
+                            </Expander>
+
+                            <!-- update -->
+                            <Expander Header="Изменить ссылки"  FontSize="14">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Родитель:"/></TextBlock>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Наследник:"/></TextBlock>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Количество:"/></TextBlock>
+
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Text="{Binding SelectedLinks.ProductId, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                             Text="{Binding SelectedLinks.UpProductId, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <Button  Grid.Row="2" Grid.ColumnSpan="2" Margin="10" 
+                                             Content="Изменить" 
+                                             Command="{Binding UpdateLinksCommand}"/>
+                                </Grid>
+                            </Expander>
+
+                            <!-- delete -->
+                            <Button Content="Удалить ссылки" 
+                                    Margin="10 50 10 10" FontSize="14" 
+                                    Command="{Binding DeleteLinksCommand}" 
+                                    CommandParameter="{Binding ElementName=LinksDataGrid, Path=SelectedItem}"/>
+                        </StackPanel>
+                    </Border>
+
                 </Grid>
             </TabItem>
             <!--#endregion-->
+            
+            
+            
             
             <!--#region Отчет -->
             <TabItem Uid="0" Header="Отчет" FontSize="18">
