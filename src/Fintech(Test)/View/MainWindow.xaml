@@ -130,11 +130,16 @@
                     </Grid.ColumnDefinitions>
 
                     <DataGrid x:Name="LinksDataGrid" 
-                                AutoGenerateColumns="True" 
+                                AutoGenerateColumns="False" 
                                 Margin="10" Grid.Column="0"                          
                                 Style="{StaticResource CustomDataGridStyle_1}"
                                 ItemsSource="{Binding Links}"  
                                  SelectedItem="{Binding SelectedLinks, Mode=TwoWay}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Родитель" Binding="{Binding UpProductId}"/>
+                            <DataGridTextColumn Header="Наследник" Binding="{Binding ProductId}"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}" Width="*"/>
+                        </DataGrid.Columns>
                     </DataGrid>
 
                     <Border Grid.Column="1" Margin="20" Width="250" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
@@ -143,6 +148,7 @@
                             <Expander Header="Добавить ссылки" FontSize="14">
                                 <Grid>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
@@ -156,15 +162,14 @@
                                     <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Наследник:"/></TextBlock>
                                     <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Количество:"/></TextBlock>
 
-                                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" 
-                                             Text="{Binding Links, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" 
-                                             Text="{Binding Links, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Text="{Binding UpProductID, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                             Text="{Binding ProductID, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBox Grid.Row="2" Grid.Column="1" Margin="5" 
                                              Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}"/>
-                                    
 
-                                    <Button  Grid.Row="2" Grid.ColumnSpan="2" Margin="15" FontSize="15" 
+                                    <Button  Grid.Row="3" Grid.ColumnSpan="2" Margin="15" FontSize="15" 
                                                 Content="Добавить"
                                                 Command="{Binding AddLinksCommand}"/>
                                 </Grid>
@@ -189,11 +194,13 @@
                                     <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Количество:"/></TextBlock>
 
                                     <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
-                                             Text="{Binding SelectedLinks.ProductId, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
                                              Text="{Binding SelectedLinks.UpProductId, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                             Text="{Binding SelectedLinks.ProductId, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5" 
+                                             Text="{Binding SelectedLinks.Count, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <Button  Grid.Row="2" Grid.ColumnSpan="2" Margin="10" 
+                                    <Button  Grid.Row="3" Grid.ColumnSpan="2" Margin="10" 
                                              Content="Изменить" 
                                              Command="{Binding UpdateLinksCommand}"/>
                                 </Grid>
@@ -206,7 +213,6 @@
                                     CommandParameter="{Binding ElementName=LinksDataGrid, Path=SelectedItem}"/>
                         </StackPanel>
                     </Border>
-
                 </Grid>
             </TabItem>
             <!--#endregion-->
@@ -216,7 +222,29 @@
             
             <!--#region Отчет -->
             <TabItem Uid="0" Header="Отчет" FontSize="18">
-
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="ReportDataGrid" 
+                                AutoGenerateColumns="True" 
+                                Margin="10" Grid.Row="0"                          
+                                Style="{StaticResource CustomDataGridStyle_1}"
+                                ItemsSource="{Binding Waiting}"  
+                                SelectedItem="{Binding SelectedRep, Mode=TwoWay}">
+                    </DataGrid>
+                    <Border Grid.Row="1" Margin="0" Width="400" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Margin="10" Content="Кнопка"  />
+                            <Button Grid.Column="1" Margin="10" Content="Кнопка"  />
+                        </Grid>
+                    </Border>
+                </Grid>
             </TabItem>
             <!--#endregion-->
         </TabControl>
@@ -226,7 +254,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Подключить к базе" Command="{Binding ConnectCommand}" Margin="10"/>
+            <!--<Button Grid.Column="0" Content="Подключить к базе" Command="{Binding ConnectCommand}" Margin="10"/>-->
             <TextBlock Grid.Column="1" Text="{Binding ABCD}"  Margin="10"/>
         </Grid>
     </Grid>

@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Fintech_Test_.Model
 {
-    [Table("Links")]
     public class Links
     {
-        public long UpProductId { get; set; }
+        [Key]
+        public long LinkId { get; set; }
+        public long? UpProductId { get; set; }
         public long ProductId { get; set; }
         public int Count { get; set; }
 

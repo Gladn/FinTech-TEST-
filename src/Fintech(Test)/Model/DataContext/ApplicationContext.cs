@@ -10,7 +10,7 @@ namespace Fintech_Test_.Model.DataContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().Property(p => p.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Links>().HasNoKey();               
+            modelBuilder.Entity<Links>().Property(p => p.LinkId).ValueGeneratedOnAdd();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

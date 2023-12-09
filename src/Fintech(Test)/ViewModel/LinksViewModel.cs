@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Fintech_Test_.ViewModel.Command;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fintech_Test_.ViewModel
@@ -18,7 +17,7 @@ namespace Fintech_Test_.ViewModel
 
         private ObservableCollection<Links> _links;
         private long _productID;
-        private long _upProductId;
+        private long? _upProductId;
         private int _count;
         private Links _selectedLinks;
 
@@ -34,7 +33,7 @@ namespace Fintech_Test_.ViewModel
             set => Set(ref _productID, value);
         }
 
-        public long UpProductID
+        public long? UpProductID
         {
             get => _upProductId;
             set => Set(ref _upProductId, value);
@@ -85,7 +84,6 @@ namespace Fintech_Test_.ViewModel
                     UpProductId = UpProductID,
                     Count = Count
                 };
-
                 context.Links.Add(newLinks);
                 await context.SaveChangesAsync();
                 Links.Add(newLinks);
@@ -105,11 +103,11 @@ namespace Fintech_Test_.ViewModel
         public ICommand UpdateLinksCommand { get; }
         private bool CanUpdateLinksCommandExecute(object parameter) => SelectedLinks != null ? true : false;
 
-        private async void OnUpdateProductCommandExecuted(object parameter)
+        private async void OnUpdateLinksCommandExecuted(object parameter)
         {
-            await UpdateProductAsync();
+            await UpdateLinksAsync();
         }
-        private async Task UpdateProductAsync()
+        private async Task UpdateLinksAsync()
         {
             using (var context = new ApplicationContext())
             {
@@ -147,10 +145,8 @@ namespace Fintech_Test_.ViewModel
             using (var context = new ApplicationContext())
             {
                 if (SelectedLinks != null)
-                {
-                    var linksToDelete = new Links { UpProductId = SelectedLinks.ProductId, ProductId = SelectedLinks.UpProductId };
-                    context.Attach(linksToDelete);
-                    context.Links.Remove(linksToDelete);
+                {                  
+                    context.Links.Remove(SelectedLinks);
                     await context.SaveChangesAsync();
 
                     SelectedLinks = null;
