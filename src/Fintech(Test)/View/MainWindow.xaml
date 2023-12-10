@@ -248,7 +248,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Margin="10" Content="Обновить" Command="{Binding LoadReportDataCommand}" />
-                            <Button Grid.Column="1" Margin="10" Content="Вывод в Excel"  />
+                            <Button Grid.Column="1" Margin="10" Content="Вывод в Excel"  Command="{Binding LoadReportDataExcelCommand}"/>
                         </Grid>
                     </Border>
                 </Grid>
