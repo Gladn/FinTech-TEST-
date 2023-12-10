@@ -1,13 +1,10 @@
-﻿using Fintech_Test_.Model.DataContext;
-using Fintech_Test_.Model;
+﻿using Fintech_Test_.Model;
+using Fintech_Test_.Model.DataContext;
 using Fintech_Test_.ViewModel.Command;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Fintech_Test_.ViewModel
 {
@@ -54,12 +51,19 @@ namespace Fintech_Test_.ViewModel
 
         public async Task LoadLinksDataAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                Links = new ObservableCollection<Links>(await context.Links
-                                                        .Include(l => l.Product)
-                                                        .Include(l => l.UpProduct)
-                                                        .ToListAsync());
+                using (var context = new ApplicationContext())
+                {
+                    Links = new ObservableCollection<Links>(await context.Links
+                                                            .Include(l => l.Product)
+                                                            .Include(l => l.UpProduct)
+                                                            .ToListAsync());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -76,21 +80,27 @@ namespace Fintech_Test_.ViewModel
 
         private async Task AddLinksAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                var newLinks = new Links
+                using (var context = new ApplicationContext())
                 {
-                    ProductId = ProductID,
-                    UpProductId = UpProductID,
-                    Count = Count
-                };
-                context.Links.Add(newLinks);
-                await context.SaveChangesAsync();
-                Links.Add(newLinks);
+                    var newLinks = new Links
+                    {
+                        ProductId = ProductID,
+                        UpProductId = UpProductID,
+                        Count = Count
+                    };
+                    context.Links.Add(newLinks);
+                    await context.SaveChangesAsync();
+                    Links.Add(newLinks);
 
-
-                Count = 0;
-                await LoadLinksDataAsync();
+                    Count = 0;
+                    await LoadLinksDataAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -109,22 +119,28 @@ namespace Fintech_Test_.ViewModel
         }
         private async Task UpdateLinksAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                if (SelectedLinks != null)
+                using (var context = new ApplicationContext())
                 {
-                    ProductID = SelectedLinks.ProductId;
-                    UpProductID = SelectedLinks.UpProductId;
-                    Count = SelectedLinks.Count;
+                    if (SelectedLinks != null)
+                    {
+                        ProductID = SelectedLinks.ProductId;
+                        UpProductID = SelectedLinks.UpProductId;
+                        Count = SelectedLinks.Count;
 
+                        context.Links.Update(SelectedLinks);
+                        await context.SaveChangesAsync();
 
-                    context.Links.Update(SelectedLinks);
-                    await context.SaveChangesAsync();
-
-                    SelectedLinks = null;
-                    Count = 0;
-                    await LoadLinksDataAsync();
+                        SelectedLinks = null;
+                        Count = 0;
+                        await LoadLinksDataAsync();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -145,7 +161,7 @@ namespace Fintech_Test_.ViewModel
             using (var context = new ApplicationContext())
             {
                 if (SelectedLinks != null)
-                {                  
+                {
                     context.Links.Remove(SelectedLinks);
                     await context.SaveChangesAsync();
 

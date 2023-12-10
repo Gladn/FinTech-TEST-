@@ -14,7 +14,7 @@ namespace Fintech_Test_.Model.DataContext
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=Fintech;Integrated Security=True;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=Fintech;Integrated Security=True;TrustServerCertificate=True;Connect Timeout=10");
         }
     }
 }

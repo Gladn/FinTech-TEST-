@@ -4,6 +4,7 @@ using Fintech_Test_.Model.DataContext;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows;
 
 namespace Fintech_Test_.ViewModel
 {
@@ -43,9 +44,16 @@ namespace Fintech_Test_.ViewModel
 
         public async Task LoadProductDataAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                Product = new ObservableCollection<Product>(await context.Product.ToListAsync());
+                using (var context = new ApplicationContext())
+                {
+                    Product = new ObservableCollection<Product>(await context.Product.ToListAsync());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -62,21 +70,28 @@ namespace Fintech_Test_.ViewModel
 
         private async Task AddProductAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                var newProduct = new Product
+                using (var context = new ApplicationContext())
                 {
-                    Name = Name,
-                    Price = Price
-                };
+                    var newProduct = new Product
+                    {
+                        Name = Name,
+                        Price = Price
+                    };
 
-                context.Product.Add(newProduct);
-                await context.SaveChangesAsync();
-                Product.Add(newProduct);
+                    context.Product.Add(newProduct);
+                    await context.SaveChangesAsync();
+                    Product.Add(newProduct);
 
-                Name = string.Empty;
-                Price = 0.0m;
-                await LoadProductDataAsync();
+                    Name = string.Empty;
+                    Price = 0.0m;
+                    await LoadProductDataAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -95,20 +110,27 @@ namespace Fintech_Test_.ViewModel
         }
         private async Task UpdateProductAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                if (SelectedProduct != null)
+                using (var context = new ApplicationContext())
                 {
-                    Name = SelectedProduct.Name;
-                    Price = SelectedProduct.Price;
+                    if (SelectedProduct != null)
+                    {
+                        Name = SelectedProduct.Name;
+                        Price = SelectedProduct.Price;
 
-                    context.Product.Update(SelectedProduct);
-                    await context.SaveChangesAsync();
+                        context.Product.Update(SelectedProduct);
+                        await context.SaveChangesAsync();
 
-                    Name = string.Empty;
-                    Price = 0.0m;
-                    await LoadProductDataAsync();
+                        Name = string.Empty;
+                        Price = 0.0m;
+                        await LoadProductDataAsync();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -126,16 +148,23 @@ namespace Fintech_Test_.ViewModel
         }
         private async Task DeleteProductAsync()
         {
-            using (var context = new ApplicationContext())
+            try
             {
-                if (SelectedProduct != null)
+                using (var context = new ApplicationContext())
                 {
-                    context.Product.Remove(SelectedProduct);
-                    await context.SaveChangesAsync();
+                    if (SelectedProduct != null)
+                    {
+                        context.Product.Remove(SelectedProduct);
+                        await context.SaveChangesAsync();
 
-                    SelectedProduct = null;
-                    await LoadProductDataAsync();
+                        SelectedProduct = null;
+                        await LoadProductDataAsync();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
