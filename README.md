@@ -1,4 +1,5 @@
-# Тестовое задание
+# Тестовое задание 
+(О выполнении ниже)
 
 [Файл задания.docx](https://github.com/Gladn/FinTech-TEST-/files/13631384/Zadanie_C.docx)
 
