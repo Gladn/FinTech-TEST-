@@ -49,15 +49,14 @@ namespace Fintech_Test_.ViewModel
         }
 
         private ObservableCollection<Product> _upProduct;
-
         public ObservableCollection<Product> UpProduct
         {
             get => _upProduct;
             set => Set(ref _upProduct, value);
         }
 
-        private ObservableCollection<Product> _product;
 
+        private ObservableCollection<Product> _product;
         public ObservableCollection<Product> Product
         {
             get => _product;
@@ -121,7 +120,8 @@ namespace Fintech_Test_.ViewModel
                     await context.SaveChangesAsync();
                     Links.Add(newLinks);
 
-
+                    UpProductId = null;
+                    ProductId = 0;
                     Count = 0;
                     await LoadLinksDataAsync();
                 }
@@ -132,13 +132,13 @@ namespace Fintech_Test_.ViewModel
             }
         }
 
-    #endregion
+        #endregion
 
 
 
-    #region Изменить Links
+        #region Изменить Links
 
-    public ICommand UpdateLinksCommand { get; }
+        public ICommand UpdateLinksCommand { get; }
         private bool CanUpdateLinksCommandExecute(object parameter) => SelectedLinks != null ? true : false;
 
         private async void OnUpdateLinksCommandExecuted(object parameter)
@@ -153,14 +153,18 @@ namespace Fintech_Test_.ViewModel
                 {
                     if (SelectedLinks != null)
                     {
-                        UpProductId = SelectedLinks.UpProductId;
-                        ProductId = SelectedLinks.ProductId;
-                        Count = SelectedLinks.Count;
+                        Product selectedProduct = context.Product.Find(SelectedLinks.ProductId);
+                        Product selectedUpProduct = context.Product.Find(SelectedLinks.UpProductId);
+
+                        SelectedLinks.Product = selectedProduct;
+                        SelectedLinks.UpProduct = selectedUpProduct;
 
                         context.Links.Update(SelectedLinks);
                         await context.SaveChangesAsync();
 
                         SelectedLinks = null;
+                        UpProductId = null;
+                        ProductId = 0;
                         Count = 0;
                         await LoadLinksDataAsync();
                     }

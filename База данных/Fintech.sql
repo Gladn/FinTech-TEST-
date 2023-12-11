@@ -49,7 +49,7 @@ VALUES
 SELECT * FROM Product
 SELECT * FROM Links
 
---drop table Links drop table Product
+--  drop table Links drop table Product
 
 SELECT UpProductId, C.Name, ProductId, P.Name, Count, P.Price FROM Links AS L
 join Product AS P ON P.Id = L.ProductId
@@ -61,6 +61,7 @@ left join Product AS c ON C.Id = L.UpProductId
 CREATE PROCEDURE ReportForProductLinks
 AS
 BEGIN
+
 CREATE TABLE #TempTable (
     UpProductId BIGINT,
     ProductId BIGINT,
@@ -70,7 +71,8 @@ CREATE TABLE #TempTable (
     AmountChildTotalCost DEC(20,2),
 	AmountChildCount INT,
     Level INT,
-	HierarchyPath VARCHAR(100)
+	HierarchyPath VARCHAR(100),
+	RootUpProductID INT
 );
 
 WITH RecursiveCTE AS (
@@ -102,24 +104,24 @@ WITH RecursiveCTE AS (
         Links L
         JOIN Product AS P ON L.ProductId = P.Id
         JOIN RecursiveCTE AS R ON L.UpProductId = R.ProductId
-) 
-INSERT INTO #TempTable (UpProductId, ProductId, Name, Count, Price, AmountChildTotalCost, AmountChildCount, Level, HierarchyPath)
-SELECT
+)  --select * from RecursiveCTE
+INSERT INTO #TempTable (UpProductId, ProductId, Name, Count, Price, AmountChildTotalCost, AmountChildCount, Level, HierarchyPath,RootUpProductID)
+SELECT DISTINCT
     L.UpProductId,
     L.ProductId,
     (
         SELECT TOP 1 REPLICATE('   ', R.Level) + P.Name
         FROM RecursiveCTE as R
         WHERE P.Id = R.ProductId
-        ORDER BY R.Level DESC
+		ORDER BY R.Level DESC
     ) AS Name,
     L.Count,
     P.Price,
     ISNULL(R.AmountChildTotalCost, 0) AS AmountChildTotalCost,
 	ISNULL(R2.AmountChildCount, 0) AS AmountChildCount,
     R.Level,
-	(select TOP 1 R.HierarchyPath from RecursiveCTE as R
-		Where P.Id = R.ProductId ORDER BY R.Level DESC) as HierarchyPath
+	R3.HierarchyPath,
+	R2.RootUpProductID
 FROM
     Links AS L
     JOIN Product AS P ON L.ProductId = P.Id
@@ -137,22 +139,30 @@ FROM
         SELECT
             RootUpProductID,
             SUM(Count) AS AmountChildCount,
-            MAX(Level) AS Level			
+            MAX(Level) AS Level	
         FROM
             RecursiveCTE
         GROUP BY
-            RootUpProductID
+            RootUpProductID			
     ) AS R2 ON P.Id = R2.RootUpProductID
 	LEFT JOIN (
         SELECT
-			UpProductId
+			ProductId,
+			HierarchyPath,
+			RootUpProductID
         FROM
             RecursiveCTE
-    ) AS R3 ON L.ProductId = R.RootProductID;
+		WHERE RootUpProductID is null
+    ) AS R3 ON L.ProductId = R3.ProductId
+
+
 	SELECT DISTINCT * FROM #TempTable
-	ORDER BY
-    HierarchyPath
+	ORDER BY HierarchyPath
+
+
 DROP TABLE #TempTable;
 END;
 
 EXEC ReportForProductLinks;
+
+--  Drop proc ReportForProductLinks
