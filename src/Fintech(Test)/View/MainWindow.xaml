@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:Fintech_Test_"
         xmlns:data="clr-namespace:Fintech_Test_.ViewModel" 
         mc:Ignorable="d"
-        Title="Тестовое задание" Height="500" Width="900">
+        Title="Тестовое задание" Height="550" Width="900">
 
     <Window.Resources>
         <data:ProductViewModel x:Key="ProductViewModel"/>
@@ -30,9 +31,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0">
+        <TabControl Grid.Row="0" >
             <!--#region Product -->
-            <TabItem Uid="0" x:Name="ProductTabItem" Header="Product" FontSize="18" DataContext="{StaticResource ProductViewModel}">
+            <TabItem Uid="0" x:Name="ProductTabItem" Header="Product" FontSize="18" DataContext="{StaticResource ProductViewModel}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -122,7 +123,7 @@
             
             
             <!--#region Links -->
-            <TabItem Uid="0" x:Name="LinksTabItem" Header="Links"  FontSize="18" DataContext="{StaticResource LinksViewModel}">
+            <TabItem Uid="0" x:Name="LinksTabItem" Header="Links"  FontSize="18" DataContext="{StaticResource LinksViewModel}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -142,10 +143,14 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Border Grid.Column="1" Margin="20" Width="250" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
+                    <Border Grid.Column="1" Margin="15" Width="250" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
                         <StackPanel>
-                            <!-- insert -->
-                            <Expander Header="Добавить ссылки" FontSize="14">
+                            <Label Margin="5" Content="Верхний уровень Иерархии = Null" FontSize="12"/>
+                                <!-- insert -->
+                            <Button Margin="10 5 10 5" FontSize="15"  Content="Загрузить новые изделия" 
+                                    Command="{Binding LoadLinksDataAsyncCommand}"/>
+                            
+                            <Expander Header="Добавить ссылки" FontSize="13">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -162,10 +167,24 @@
                                     <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Наследник:"/></TextBlock>
                                     <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Количество:"/></TextBlock>
 
-                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
-                                             Text="{Binding UpProductID, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
-                                             Text="{Binding ProductID, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                              ItemsSource="{Binding UpProduct}" 
+                                              DisplayMemberPath="Name"
+                                              SelectedValuePath="Id"
+                                              SelectedValue="{Binding UpProductId, Mode=TwoWay}">
+                                    </ComboBox>
+
+
+                                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                              ItemsSource="{Binding Product}" 
+                                              DisplayMemberPath="Name"
+                                              SelectedValuePath="Id"
+                                              SelectedValue="{Binding ProductId, Mode=TwoWay}"
+                                              SelectedIndex="0">
+                                    </ComboBox>
+
+
                                     <TextBox Grid.Row="2" Grid.Column="1" Margin="5" 
                                              Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -176,7 +195,7 @@
                             </Expander>
 
                             <!-- update -->
-                            <Expander Header="Изменить ссылки"  FontSize="14">
+                            <Expander Header="Изменить ссылки"  FontSize="13">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -193,10 +212,21 @@
                                     <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Наследник:"/></TextBlock>
                                     <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Количество:"/></TextBlock>
 
-                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
-                                             Text="{Binding SelectedLinks.UpProductId, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
-                                             Text="{Binding SelectedLinks.ProductId, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                              ItemsSource="{Binding UpProduct}" 
+                                              DisplayMemberPath="Name"
+                                              SelectedValuePath="Id"
+                                              SelectedValue="{Binding SelectedLinks.UpProductId, Mode=TwoWay}">
+                                    </ComboBox>
+
+                                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                         ItemsSource="{Binding  Product}" 
+                                         DisplayMemberPath="Name"
+                                         SelectedValuePath="Id"
+                                         SelectedValue="{Binding SelectedLinks.ProductId}">
+                                    </ComboBox>
+
                                     <TextBox Grid.Row="2" Grid.Column="1" Margin="5" 
                                              Text="{Binding SelectedLinks.Count, UpdateSourceTrigger=PropertyChanged}"/>
 

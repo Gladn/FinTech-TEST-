@@ -13,10 +13,10 @@ namespace Fintech_Test_.ViewModel
         #region Links
 
         private ObservableCollection<Links> _links;
-        private long _productID;
         private long? _upProductId;
+        private long _productId;
         private int _count;
-        private Links _selectedLinks;
+        private Links? _selectedLinks;
 
         public ObservableCollection<Links> Links
         {
@@ -24,16 +24,16 @@ namespace Fintech_Test_.ViewModel
             set => Set(ref _links, value);
         }
 
-        public long ProductID
-        {
-            get => _productID;
-            set => Set(ref _productID, value);
-        }
-
-        public long? UpProductID
+        public long? UpProductId
         {
             get => _upProductId;
             set => Set(ref _upProductId, value);
+        }
+
+        public long ProductId
+        {
+            get => _productId;
+            set => Set(ref _productId, value);
         }
 
         public int Count
@@ -48,6 +48,28 @@ namespace Fintech_Test_.ViewModel
             set { Set(ref _selectedLinks, value); }
         }
 
+        private ObservableCollection<Product> _upProduct;
+
+        public ObservableCollection<Product> UpProduct
+        {
+            get => _upProduct;
+            set => Set(ref _upProduct, value);
+        }
+
+        private ObservableCollection<Product> _product;
+
+        public ObservableCollection<Product> Product
+        {
+            get => _product;
+            set => Set(ref _product, value);
+        }
+
+        public ICommand LoadLinksDataAsyncCommand { get; }
+        private bool CanLoadLinksDataAsyncCommandExecute(object parameter) => true;
+        private async void OnLoadLinksDataAsyncCommandExecuted(object parameter)
+        {
+            await LoadLinksDataAsync();
+        }
 
         public async Task LoadLinksDataAsync()
         {
@@ -56,9 +78,14 @@ namespace Fintech_Test_.ViewModel
                 using (var context = new ApplicationContext())
                 {
                     Links = new ObservableCollection<Links>(await context.Links
-                                                            .Include(l => l.Product)
                                                             .Include(l => l.UpProduct)
+                                                            .Include(l => l.Product)
                                                             .ToListAsync());
+
+                    UpProduct = new ObservableCollection<Product>(await context.Product.ToListAsync());
+                    UpProduct.Insert(0, new Product { Name = "Null", Id = null });
+
+                    Product = new ObservableCollection<Product>(await context.Product.ToListAsync());                
                 }
             }
             catch (Exception ex)
@@ -86,13 +113,14 @@ namespace Fintech_Test_.ViewModel
                 {
                     var newLinks = new Links
                     {
-                        ProductId = ProductID,
-                        UpProductId = UpProductID,
+                        UpProductId = UpProductId,
+                        ProductId = ProductId,
                         Count = Count
                     };
                     context.Links.Add(newLinks);
                     await context.SaveChangesAsync();
                     Links.Add(newLinks);
+
 
                     Count = 0;
                     await LoadLinksDataAsync();
@@ -104,13 +132,13 @@ namespace Fintech_Test_.ViewModel
             }
         }
 
-        #endregion
+    #endregion
 
 
 
-        #region Изменить Links
+    #region Изменить Links
 
-        public ICommand UpdateLinksCommand { get; }
+    public ICommand UpdateLinksCommand { get; }
         private bool CanUpdateLinksCommandExecute(object parameter) => SelectedLinks != null ? true : false;
 
         private async void OnUpdateLinksCommandExecuted(object parameter)
@@ -125,8 +153,8 @@ namespace Fintech_Test_.ViewModel
                 {
                     if (SelectedLinks != null)
                     {
-                        ProductID = SelectedLinks.ProductId;
-                        UpProductID = SelectedLinks.UpProductId;
+                        UpProductId = SelectedLinks.UpProductId;
+                        ProductId = SelectedLinks.ProductId;
                         Count = SelectedLinks.Count;
 
                         context.Links.Update(SelectedLinks);
@@ -176,11 +204,14 @@ namespace Fintech_Test_.ViewModel
         #endregion
 
 
+
         public LinksViewModel()
         {
             Links = new ObservableCollection<Links>();
 
             _ = LoadLinksDataAsync();
+
+            LoadLinksDataAsyncCommand = new RelayCommand(OnLoadLinksDataAsyncCommandExecuted, CanLoadLinksDataAsyncCommandExecute);
 
             AddLinksCommand = new RelayCommand(OnAddLinksCommandExecuted, CanAddLinksCommandExecute);
 
