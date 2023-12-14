@@ -2,6 +2,7 @@
 using Fintech_Test_.Model.DataContext;
 using Fintech_Test_.ViewModel.Command;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -98,7 +99,12 @@ namespace Fintech_Test_.ViewModel
         #region Добавить Links        
 
         public ICommand AddLinksCommand { get; }
-        private bool CanAddLinksCommandExecute(object parameter) => true;
+        private bool CanAddLinksCommandExecute(object parameter)
+        {
+            if (UpProductId == null && Count == 1) return false;
+            else return true;
+        }
+
         private async void OnAddLinksCommandExecuted(object parameter)
         {
             await AddLinksAsync();
@@ -139,8 +145,11 @@ namespace Fintech_Test_.ViewModel
         #region Изменить Links
 
         public ICommand UpdateLinksCommand { get; }
-        private bool CanUpdateLinksCommandExecute(object parameter) => SelectedLinks != null ? true : false;
-
+        private bool CanUpdateLinksCommandExecute(object parameter)
+        {
+            if (SelectedLinks == null || SelectedLinks.UpProductId == null && SelectedLinks.Count == 1) return false;
+            else return true;
+        }
         private async void OnUpdateLinksCommandExecuted(object parameter)
         {
             await UpdateLinksAsync();

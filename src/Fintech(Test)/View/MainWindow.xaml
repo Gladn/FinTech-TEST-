@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Fintech_Test_"
         xmlns:data="clr-namespace:Fintech_Test_.ViewModel" 
         mc:Ignorable="d"
-        Title="Тестовое задание" Height="550" Width="900">
+        Title="Тестовое задание" Height="600" Width="900">
 
     <Window.Resources>
         <data:ProductViewModel x:Key="ProductViewModel"/>
@@ -146,7 +146,8 @@
 
                     <Border Grid.Column="1" Margin="15" Width="250" CornerRadius="3" BorderThickness="0.5" BorderBrush="Black">
                         <StackPanel>
-                            <Label Margin="5" Content="Верхний уровень Иерархии = Null" FontSize="12"/>
+                            <Label Margin="5 5 5 0" Content="Верхний уровень Иерархии = Null" FontSize="12"/>
+                            <Label Margin="5 0" Content="Количество верхнего иерархии = 1" FontSize="12"/>
                                 <!-- insert -->
                             <Button Margin="10 5 10 5" FontSize="15"  Content="Загрузить новые изделия" 
                                     Command="{Binding LoadLinksDataAsyncCommand}"/>
