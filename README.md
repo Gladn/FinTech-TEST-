@@ -111,7 +111,10 @@
 
 
 
-![изображение](https://github.com/Gladn/FinTech-TEST-/assets/92585647/ef16b64b-8ddd-45aa-a6d8-5d85d4f35d92)
+![изображение](https://github.com/Gladn/FinTech-TEST-/assets/92585647/c3c77075-c6b8-4d6e-92d3-90dec8b25245)
+
+
+
 
 (Думаю тут стоило сделать вывод названий изделий в datagrid для удобности и сделать автообновление новой информации из Вкладки 1)
 
@@ -130,12 +133,14 @@
 • Вывод отчета в excel
 
 
-![изображение](https://github.com/Gladn/FinTech-TEST-/assets/92585647/b0e4f106-655b-4fc8-8784-c99dc1618f21)
+![изображение](https://github.com/Gladn/FinTech-TEST-/assets/92585647/8c72e06d-3eaf-41a5-af36-3e683791d200)
+
 
 
 Отчет в Excel:
 
-![изображение](https://github.com/Gladn/FinTech-TEST-/assets/92585647/7886dfd2-d2d0-43e3-ad98-eb3cde76d7fe)
+![изображение](https://github.com/Gladn/FinTech-TEST-/assets/92585647/99e360c1-63a2-4ecf-a2c6-e73a4f51f164)
+
 
 
 
