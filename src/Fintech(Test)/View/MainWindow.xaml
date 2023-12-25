@@ -135,11 +135,13 @@
                                 Margin="10" Grid.Column="0"                          
                                 Style="{StaticResource CustomDataGridStyle_1}"
                                 ItemsSource="{Binding Links}"  
-                                 SelectedItem="{Binding SelectedLinks, Mode=TwoWay}">
+                                SelectedItem="{Binding SelectedLinks, Mode=TwoWay}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding LinkId}"/>
-                            <DataGridTextColumn Header="Родитель" Binding="{Binding UpProductId}"/>
-                            <DataGridTextColumn Header="Наследник" Binding="{Binding ProductId}"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding LinkId}" Visibility="Hidden"/>
+                            <DataGridTextColumn Header="Род. ID" Binding="{Binding UpProductId}"/>
+                            <DataGridTextColumn Header="Родитель" Binding="{Binding UpProduct.Name}" Width="100"/>
+                            <DataGridTextColumn Header="Наслед. ID" Binding="{Binding ProductId}"/>
+                            <DataGridTextColumn Header="Наследник" Binding="{Binding Product.Name}" Width="100"/>
                             <DataGridTextColumn Header="Количество" Binding="{Binding Count}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>

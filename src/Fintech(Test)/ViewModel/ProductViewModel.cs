@@ -12,35 +12,40 @@ namespace Fintech_Test_.ViewModel
     {
         #region Product
 
-        private ObservableCollection<Product> _product;
-        private string _name;
-        private decimal _price;
-        private Product _selectedProduct;
-
+        private ObservableCollection<Product> _product;       
         public ObservableCollection<Product> Product
         {
             get => _product;
             set => Set(ref _product, value);
         }
+        
 
+        private string _name;
         public string Name
         {
             get => _name;
             set => Set(ref _name, value);
         }
 
+
+        private decimal _price;
         public decimal Price
         {
             get => _price;
             set => Set(ref _price, value);
         }
 
+
+        private Product _selectedProduct;
         public Product? SelectedProduct
         {
             get { return _selectedProduct; }
             set { Set(ref _selectedProduct, value); }
         }
 
+
+
+        #region Отображение Product
 
         public async Task LoadProductDataAsync()
         {
@@ -57,9 +62,11 @@ namespace Fintech_Test_.ViewModel
             }
         }
 
+        #endregion
 
 
-        #region Добавить Product        
+
+        #region Команда добавления Product        
 
         public ICommand AddProductCommand { get; }
         private bool CanAddProductCommandExecute(object parameter) => true;
@@ -99,7 +106,7 @@ namespace Fintech_Test_.ViewModel
 
 
 
-        #region Изменить Product
+        #region Команда изменения Product
 
         public ICommand UpdateProductCommand { get; }
         private bool CanUpdateProductCommandExecute(object parameter) => SelectedProduct != null ? true : false;
@@ -138,7 +145,7 @@ namespace Fintech_Test_.ViewModel
 
 
 
-        #region Удалить Product
+        #region Команда удаления Product
 
         public ICommand DeleteProductCommand { get; }
         private bool CanDeleteProductCommandExecute(object parameter) => SelectedProduct != null ? true : false;

@@ -2,7 +2,6 @@
 using Fintech_Test_.Model.DataContext;
 using Fintech_Test_.ViewModel.Command;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -14,40 +13,44 @@ namespace Fintech_Test_.ViewModel
         #region Links
 
         private ObservableCollection<Links> _links;
-        private long? _upProductId;
-        private long _productId;
-        private int _count;
-        private Links? _selectedLinks;
-
         public ObservableCollection<Links> Links
         {
             get => _links;
             set => Set(ref _links, value);
         }
 
+
+        private long? _upProductId;
         public long? UpProductId
         {
             get => _upProductId;
             set => Set(ref _upProductId, value);
         }
 
+
+        private long _productId;
         public long ProductId
         {
             get => _productId;
             set => Set(ref _productId, value);
         }
 
+
+        private int _count;
         public int Count
         {
             get => _count;
             set => Set(ref _count, value);
         }
 
+
+        private Links? _selectedLinks;
         public Links? SelectedLinks
         {
             get { return _selectedLinks; }
             set { Set(ref _selectedLinks, value); }
         }
+
 
         private ObservableCollection<Product> _upProduct;
         public ObservableCollection<Product> UpProduct
@@ -63,6 +66,11 @@ namespace Fintech_Test_.ViewModel
             get => _product;
             set => Set(ref _product, value);
         }
+
+
+
+
+        #region Команда отображения Links
 
         public ICommand LoadLinksDataAsyncCommand { get; }
         private bool CanLoadLinksDataAsyncCommandExecute(object parameter) => true;
@@ -85,7 +93,8 @@ namespace Fintech_Test_.ViewModel
                     UpProduct = new ObservableCollection<Product>(await context.Product.ToListAsync());
                     UpProduct.Insert(0, new Product { Name = "Null", Id = null });
 
-                    Product = new ObservableCollection<Product>(await context.Product.ToListAsync());                
+                    Product = new ObservableCollection<Product>(await context.Product.ToListAsync());
+
                 }
             }
             catch (Exception ex)
@@ -94,14 +103,16 @@ namespace Fintech_Test_.ViewModel
             }
         }
 
+        #endregion
 
 
-        #region Добавить Links        
+
+        #region Команда добавления Links        
 
         public ICommand AddLinksCommand { get; }
         private bool CanAddLinksCommandExecute(object parameter)
         {
-            if (UpProductId == null && Count == 1) return false;
+            if (UpProductId == null && Count != 1) return false;
             else return true;
         }
 
@@ -116,16 +127,31 @@ namespace Fintech_Test_.ViewModel
             {
                 using (var context = new ApplicationContext())
                 {
-                    var newLinks = new Links
-                    {
-                        UpProductId = UpProductId,
-                        ProductId = ProductId,
-                        Count = Count
-                    };
-                    context.Links.Add(newLinks);
-                    await context.SaveChangesAsync();
-                    Links.Add(newLinks);
 
+                    if (UpProductId == null)
+                    {
+                        var newLinks = new Links
+                        {
+                            UpProductId = null,
+                            ProductId = ProductId,
+                            Count = Count
+                        };
+                        context.Links.Add(newLinks);
+                        await context.SaveChangesAsync();
+                        Links.Add(newLinks);
+                    }
+                    else
+                    {
+                        var newLinks = new Links
+                        {
+                            UpProductId = UpProductId,
+                            ProductId = ProductId,
+                            Count = Count
+                        };
+                        context.Links.Add(newLinks);
+                        await context.SaveChangesAsync();
+                        Links.Add(newLinks);
+                    }
                     UpProductId = null;
                     ProductId = 0;
                     Count = 0;
@@ -142,12 +168,12 @@ namespace Fintech_Test_.ViewModel
 
 
 
-        #region Изменить Links
+        #region Команда изменения Links
 
         public ICommand UpdateLinksCommand { get; }
         private bool CanUpdateLinksCommandExecute(object parameter)
         {
-            if (SelectedLinks == null || SelectedLinks.UpProductId == null && SelectedLinks.Count == 1) return false;
+            if (SelectedLinks == null || SelectedLinks.UpProductId == null && SelectedLinks.Count != 1) return false;
             else return true;
         }
         private async void OnUpdateLinksCommandExecuted(object parameter)
@@ -189,7 +215,7 @@ namespace Fintech_Test_.ViewModel
 
 
 
-        #region Удалить Links
+        #region Команда удаления Links
 
         public ICommand DeleteLinksCommand { get; }
         private bool CanDeleteLinksCommandExecute(object parameter) => SelectedLinks != null ? true : false;
