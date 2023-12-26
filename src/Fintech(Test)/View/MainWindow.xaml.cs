@@ -20,9 +20,6 @@ namespace Fintech_Test_
         public MainWindow()
         {
             InitializeComponent();
-            ProductTabItem.DataContext = new ProductViewModel();
-            LinksTabItem.DataContext = new LinksViewModel();
-            ReportTabItem.DataContext = new ReportViewModel();
         }
     }
 }
